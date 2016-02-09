@@ -1,0 +1,15 @@
+[{ "author" : "Andr3as",
+    "version": "0.1.0",
+    "name" : "CodeSpell",
+    "url" : "https://github.com/Andr3as/Codiad-CodeSpell",
+    "bottombar" : [{
+        "action" : "codiad.CodeSpell.check(true);",
+        "icon" : "icon-doc-text",
+        "title" : "CodeSpell"
+    }],
+    "config": [{
+        "file": "dialog.php?action=settings",
+        "icon": "icon-doc-text",
+        "title": "CodeSpell"
+    }]
+}]

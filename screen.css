@@ -1,0 +1,10 @@
+.codespell thead {
+    background: #3b3b3b none repeat scroll 0 0;
+    font-weight: bold;
+    padding-top: 8px;
+    text-align: left;
+}
+
+.codespell tr[data-mistake] {
+    cursor: pointer;
+}
