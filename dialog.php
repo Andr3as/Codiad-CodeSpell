@@ -6,9 +6,11 @@
 -->
 <form>
     <?php
+        include_once('../../common.php');
+        
         switch($_GET['action']) {
             case 'settings':
-                include('templates/settings.html');
+                include('templates/settings.php');
                 break;
             case 'view':
                 include('templates/view.php');
