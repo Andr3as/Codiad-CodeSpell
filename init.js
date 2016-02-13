@@ -23,22 +23,41 @@
         path: curpath,
         mistakes: [],
         typo: null,
+        fn: function(){},
         
         init: function() {
             var _this = this;
-            var fn = function() {
+            this.fn = function() {
                 var lang = _this.getLanguage();
                 _this.setDictionary(lang);
+                //Load user dictionary
+                _this.loadOwnDictionary();
             };
-            $.getScript(this.path + "typo/typo.js", fn);
+            $.getScript(this.path + "typo/typo.js", this.fn);
             
             $('.sb-right-content a:nth(1)').after('<a onclick="codiad.CodeSpell.check(true); return false;"><span class="icon-doc-text bigger-icon"></span>Spellcheck</a>');
             
-            amplify.subscribe('settings.loaded', fn);
-            amplify.subscribe('settings.changed', fn);
+            amplify.subscribe('settings.loaded', this.fn);
+            amplify.subscribe('settings.changed', this.fn);
             amplify.subscribe('active.onSave', function(){
                 var display = _this.getDisplayOnSave();
                 _this.check(display);
+            });
+        },
+        
+        /**
+         * @name selectLines
+         * @argument (object) mistake
+         */
+        addMistake: function(mistake) {
+            var _this = this;
+            $.getJSON(this.path + "controller.php?action=addMistakeToOwnDictionary&mistake=" + mistake.word, function(result){
+                if (result.status == "success") {
+                    codiad.message.success(i18n("Mistake added!"));
+                    _this.loadOwnDictionary();
+                } else {
+                    codiad.message.error(i18n("Failed to add mistake to own dictionary!"));
+                }
             });
         },
         
@@ -86,6 +105,16 @@
             } else {
                 codiad.message.success(i18n("No mistakes found"));
             }
+        },
+        
+        deleteUserDictionary: function() {
+            var _this = this;
+            $.getJSON(this.path + "controller.php?action=deleteUserDictionary", function(result){
+                codiad.message[result.status](i18n(result.message));
+                if (result.status == "success") {
+                    _this.fn();
+                }
+            });
         },
         
         getComments: function(content) {
@@ -163,6 +192,21 @@
             return localStorage.getItem('codiad.plugin.codespell.multiSelect') || "true";
         },
         
+        loadOwnDictionary: function() {
+            var _this = this;
+            if (this.typo === null) {
+                return false;
+            }
+            
+            $.getJSON(this.path + "controller.php?action=loadOwnDictionary", function(result) {
+                if (result.status == "success") {
+                    var parsed = _this.typo._parseDIC(result.dictionary);
+                    $.each(parsed, function(i, item){
+                        codiad.CodeSpell.typo.dictionaryTable[i] = item;
+                    });
+                }
+            });
+        },
         
         /**
          * @name selectLines

@@ -27,5 +27,13 @@
             </select>
         </td>
     </tr>
+    <tr>
+        <td><?php i18n("Delete complete user dictionary?"); ?></td>
+        <td>
+            <button onclick="codiad.CodeSpell.deleteUserDictionary(); return false;">
+                <?php i18n("Delete"); ?>
+            </button>
+        </td>
+    </tr>
     
 </table>

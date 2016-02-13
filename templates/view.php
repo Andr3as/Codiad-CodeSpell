@@ -5,17 +5,19 @@
     This information must remain intact.
 -->
 <div class="codespell">
-    <label>Spelling mistakes</label>
+    <label><?php i18n("Spelling mistakes"); ?></label>
     <hr>
     <table>
         <thead>
-            <td style="width: 75%">mistake</td>
-            <td style="width: 25%">line(s)</td>
+            <td style="width: 60%"><?php i18n("mistake"); ?></td>
+            <td style="width: 20%"><?php i18n("line(s)"); ?></td>
+            <td style="width: 20%"><?php i18n("ignore"); ?>*</td>
         </thead>
         <tbody></tbody>
     </table>
+    *: <?php i18n("Ignore adds word to your own dictionary"); ?><br>
     
-    <button onclick="codiad.modal.unload(); return false;">Close</button>
+    <button onclick="codiad.modal.unload(); return false;"><?php i18n("Close"); ?></button>
     
     <script>
         var _this = codiad.CodeSpell;
@@ -24,12 +26,19 @@
             mistake = _this.mistakes[i];
             word    = mistake.word;
             lines   = mistake.lines.join(", ");
-            $('.codespell table tbody').append("<tr data-mistake='" + JSON.stringify(mistake) + "'><td>" + word + "</td><td>" + lines + "</td></tr>");
+            $('.codespell table tbody').append("<tr data-mistake='" + JSON.stringify(mistake) + "'><td data-action=\"show\">" + word + "</td><td data-action=\"show\">" + lines + "</td><td><i class=\"icon-plus\" data-action=\"add\"></i></td></tr>");
         }
         
-        $('.codespell table tr[data-mistake]').click(function(){
-            console.log(this, $(this).attr('data-mistake'));
-            codiad.CodeSpell.selectLines(JSON.parse($(this).attr('data-mistake')));
+        $('.codespell table [data-action="show"]').click(function(){
+            var mistake = JSON.parse($($(this).parent()).attr('data-mistake'));
+            codiad.CodeSpell.selectLines(mistake);
+        });
+        
+        $('.codespell table [data-action="add"]').click(function(){
+            var mistake = JSON.parse($($($(this).parent()).parent()).attr('data-mistake'));
+            console.log(mistake);
+            codiad.CodeSpell.addMistake(mistake);
+            $($($(this).parent()).parent()).remove();
         });
     </script>
 </div>
