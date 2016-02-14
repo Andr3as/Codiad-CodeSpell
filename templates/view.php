@@ -9,9 +9,10 @@
     <hr>
     <table>
         <thead>
-            <td style="width: 60%"><?php i18n("mistake"); ?></td>
-            <td style="width: 20%"><?php i18n("line(s)"); ?></td>
-            <td style="width: 20%"><?php i18n("ignore"); ?>*</td>
+            <td style="width: 40%"><?php i18n("mistake"); ?></td>
+            <td style="width: 15%"><?php i18n("line(s)"); ?></td>
+            <td style="width: 5%"><?php i18n("ignore"); ?>*</td>
+            <td style="width: 40%"><?php i18n("suggestions"); ?></td>
         </thead>
         <tbody></tbody>
     </table>
@@ -26,7 +27,7 @@
             mistake = _this.mistakes[i];
             word    = mistake.word;
             lines   = mistake.lines.join(", ");
-            $('.codespell table tbody').append("<tr data-mistake='" + JSON.stringify(mistake) + "'><td data-action=\"show\">" + word + "</td><td data-action=\"show\">" + lines + "</td><td><i class=\"icon-plus\" data-action=\"add\"></i></td></tr>");
+            $('.codespell table tbody').append("<tr data-mistake='" + JSON.stringify(mistake) + "'><td data-action=\"show\">" + word + "</td><td data-action=\"show\">" + lines + "</td><td><i class=\"icon-plus\" data-action=\"add\"></i></td><td data-word=\"" + word + "\"></td></tr>");
         }
         
         $('.codespell table [data-action="show"]').click(function(){
@@ -36,7 +37,6 @@
         
         $('.codespell table [data-action="add"]').click(function(){
             var mistake = JSON.parse($($($(this).parent()).parent()).attr('data-mistake'));
-            console.log(mistake);
             codiad.CodeSpell.addMistake(mistake);
             $($($(this).parent()).parent()).remove();
         });

@@ -9,6 +9,9 @@
         include_once('../../common.php');
         
         switch($_GET['action']) {
+            case 'confirm':
+                include('templates/confirm.php');
+                break;
             case 'settings':
                 include('templates/settings.php');
                 break;

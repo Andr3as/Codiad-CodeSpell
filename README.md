@@ -12,8 +12,8 @@ Most of the dictionaries are licensed under different licenses.
 See there for more details. All code from me is licensed under MIT License.
 
 ##Credits
-Dictionaries from the [Chromium projekt](https://www.chromium.org/Home).
+Dictionaries from the [Chromium project](https://www.chromium.org/Home).
 Typo.js from [github.com/cfinke/Typo.js](https://github.com/cfinke/Typo.js).
 
 ###To do
-Check #1 for a complete list
+Check [#1](https://github.com/Andr3as/Codiad-CodeSpell/issues/1) for a complete list

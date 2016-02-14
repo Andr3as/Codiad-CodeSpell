@@ -1,3 +1,7 @@
+a[onclick="codiad.CodeSpell.check(true);"] {
+    float: left;
+}
+
 .codespell thead {
     background: #3b3b3b none repeat scroll 0 0;
     font-weight: bold;
@@ -5,6 +9,10 @@
     text-align: left;
 }
 
-.codespell tr[data-mistake] {
+.codespell td:nth-child(1), .codespell td:nth-child(2), .codespell .icon-plus, .codespell td[data-word] span {
     cursor: pointer;
+}
+
+.codespell-confirm .bold {
+    font-size: 14px;
 }

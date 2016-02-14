@@ -23,6 +23,8 @@
         path: curpath,
         mistakes: [],
         typo: null,
+        worker: null,
+        
         fn: function(){},
         
         init: function() {
@@ -43,6 +45,10 @@
                 var display = _this.getDisplayOnSave();
                 _this.check(display);
             });
+            //Worker
+            this.worker = new Worker(this.path+'worker.js');
+            this.worker.addEventListener('message', this.getWorkerResult.bind(this));
+            this.worker.postMessage({type: "setLanguage", language: this.getLanguage()});
         },
         
         /**
@@ -90,8 +96,6 @@
                         "word": words[i],
                         "lines": lines
                     });
-                    
-                    console.log(lines, words[i]);
                 }
             }
             
@@ -100,7 +104,9 @@
                 this.mistakes = wrong_words;
                 if (display) {
                     //Display dialog
-                    codiad.modal.load(400, this.path + "dialog.php?action=view");
+                    codiad.modal.load(800, this.path + "dialog.php?action=view");
+                    //Load suggestions
+                    this.getSuggestions(wrong_words);
                 }
             } else {
                 codiad.message.success(i18n("No mistakes found"));
@@ -166,6 +172,12 @@
             return lines;
         },
         
+        
+        getSuggestions: function(mistakes) {
+            console.log(mistakes);
+            this.worker.postMessage({type: "getSuggestions", mistakes: mistakes});
+        },
+        
         getUniqueWords: function(content) {
             var words = content.replace(/[^a-z0-9]/gi, " ").split(" ");
             var unique_words = [];
@@ -178,6 +190,27 @@
             }
             
             return unique_words;
+        },
+        
+        getWorkerResult: function(e) {
+            var _this = this;
+            var data = JSON.parse(e.data.data);
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                for (var j = 0; j < data[i].suggestions.length; j++) {
+                    if (j > 0) {
+                        $('.codespell table tbody td[data-word="' + data[i].word + '"]').append(" - ");
+                    }
+                    $('.codespell table tbody td[data-word="' + data[i].word + '"]').append("<span>" + data[i].suggestions[j] + "</span>");
+                }
+            }
+            
+            $('.codespell table tbody td[data-word] span').click(function(){
+                var mistake = $($(this).parent()).attr('data-word');
+                var suggestion = $(this).text();
+                codiad.modal.load(400, _this.path + "dialog.php?action=confirm&mistake=" + mistake + "&suggestion=" +  suggestion);
+                console.log(mistake, suggestion);
+            });
         },
         
         getDisplayOnSave: function() {
